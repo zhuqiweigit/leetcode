@@ -13,7 +13,6 @@ struct TreeNode {
 class Solution {
 public:
     vector<TreeNode*> generateTrees(int n) {
-        vector<vector<TreeNode*>> dp(n + 1);
 
     }
 };
