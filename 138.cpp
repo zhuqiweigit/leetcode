@@ -37,14 +37,14 @@ public:
            }else{
                temp = mp[cur_origin->next];
            }
-           if(mp.find(cur_origin->next->next) == mp.end()){
-               temp->next = cur_origin->next->next ? nullptr : new Node(cur_origin->next->next->val);
+           if( mp.find(cur_origin->next->next) == mp.end()){
+               temp->next = cur_origin->next->next == nullptr ? nullptr : new Node(cur_origin->next->next->val);
                mp[cur_origin->next->next] = temp->next;
            }else{
                temp->next = mp[cur_origin->next->next];
            }
            if(mp.find(cur_origin->next->random) == mp.end()){
-               temp->random = cur_origin->next->random ? nullptr : new Node(cur_origin->next->random->val);
+               temp->random = cur_origin->next->random == nullptr ? nullptr : new Node(cur_origin->next->random->val);
                mp[cur_origin->next->random] = temp->random;
            }else{
                temp->random = mp[cur_origin->next->random];
