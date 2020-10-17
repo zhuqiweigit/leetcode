@@ -11,22 +11,18 @@ using namespace std;
 
 class Solution {
 public:
-    bool canPermutePalindrome(string s) {
-        map<char, int> mp;
-        for(int i = 0; i < s.size(); i++){
-            if(mp.find(s[i]) == mp.end()){
-                mp[s[i]] = 1;
-            }else{
-                mp[s[i]]++;
+    vector<vector<int>> multiply(vector<vector<int>>& A, vector<vector<int>>& B) {
+        int m = A.size(), n = B[0].size(), t = A[0].size();
+        vector<vector<int>> C(m, vector<int>(n, 0));
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                int sum = 0;
+                for(int k = 0; k < t; k++){
+                    sum += A[i][k] * B[k][j];
+                }
+                C[i][j] = sum;
             }
         }
-        int odd_cnt = 0;
-        for(auto &kv : mp){
-            if(kv.second % 2 != 0)
-                odd_cnt++;
-        }
-        if(odd_cnt > 1)
-            return false;
-        return true;
+        return C;
     }
 };

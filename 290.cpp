@@ -11,22 +11,31 @@ using namespace std;
 
 class Solution {
 public:
-    bool canPermutePalindrome(string s) {
-        map<char, int> mp;
-        for(int i = 0; i < s.size(); i++){
-            if(mp.find(s[i]) == mp.end()){
-                mp[s[i]] = 1;
+    bool wordPattern(string pattern, string s) {
+        stringstream is(s);
+        string word;
+        map<char, string> mp;
+        map<string, char> mp2;
+        for(int i = 0; i < pattern.size(); i++){
+            if(!(is >> word)){
+                return false;
+            }
+            if(mp.find(pattern[i]) == mp.end()){
+                mp[pattern[i]] = word;
             }else{
-                mp[s[i]]++;
+                if(mp[pattern[i]] !=word)
+                    return false;
+            }
+            if(mp2.find(word) == mp2.end()){
+                mp2[word] = pattern[i];
+            }else{
+                if(mp2[word] != pattern[i])
+                    return false;
             }
         }
-        int odd_cnt = 0;
-        for(auto &kv : mp){
-            if(kv.second % 2 != 0)
-                odd_cnt++;
-        }
-        if(odd_cnt > 1)
+        if(is >> word)
             return false;
+
         return true;
     }
 };

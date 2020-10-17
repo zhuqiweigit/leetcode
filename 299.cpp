@@ -11,22 +11,26 @@ using namespace std;
 
 class Solution {
 public:
-    bool canPermutePalindrome(string s) {
+    string getHint(string secret, string guess) {
+        int cntA = 0, cntB = 0;
         map<char, int> mp;
-        for(int i = 0; i < s.size(); i++){
-            if(mp.find(s[i]) == mp.end()){
-                mp[s[i]] = 1;
+        for(int i = 0; i < secret.size(); i++){
+            if(mp.find(secret[i]) == mp.end()){
+                mp[secret[i]] = 1;
             }else{
-                mp[s[i]]++;
+                mp[secret[i]]++;
             }
         }
-        int odd_cnt = 0;
-        for(auto &kv : mp){
-            if(kv.second % 2 != 0)
-                odd_cnt++;
+        int j;
+        for(j = 0; j < guess.size(); j++){
+            if(j < secret.size() && guess[j] == secret[j])
+                cntA++;
+            if(mp.find(guess[j]) != mp.end() && mp[guess[j]] > 0){
+                cntB++;
+                mp[guess[j]]--;
+            }
         }
-        if(odd_cnt > 1)
-            return false;
-        return true;
+        cntB = cntB - cntA;
+        return to_string(cntA) + "A" + to_string(cntB) + "B";
     }
 };

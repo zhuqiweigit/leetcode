@@ -9,24 +9,32 @@
 #include <set>
 using namespace std;
 
-class Solution {
+class WordDistance {
 public:
-    bool isAnagram(string s, string t) {
-        map<char, int> mp;
-        if(s.size() != t.size())
-            return false;
-        for(int i = 0; i < s.size(); i++){
-            if(mp.find(s[i]) == mp.end())
-                mp[s[i]] = 1;
-            else mp[s[i]]++;
+    map<string, vector<int>> mp;
+    WordDistance(vector<string>& words) {
+        for(int i = 0; i < words.size(); i++){
+            if(mp.find(words[i]) == mp.end()){
+                vector<int> temp;
+                temp.push_back(i);
+                mp[words[i]] = temp;
+            }else{
+                mp[words[i]].push_back(i);
+            }
         }
-        for(int j = 0; j < t.size(); j++){
-            if(mp.find(t[j]) == mp.end())
-                return false;
-            if(mp[t[j]] <= 0)
-                return false;
-            mp[t[j]]--;
+    }
+
+    int shortest(string word1, string word2) {
+        vector<int> &loc1 = mp[word1], &loc2 = mp[word2];
+        int i = 0, j = 0, min_dst = numeric_limits<int>::max();
+        while(i < loc1.size() && j < loc2.size()){
+            if(abs(loc1[i] - loc2[j]) < min_dst){
+                min_dst = abs(loc1[i] - loc2[j]);
+            }
+            if(loc1[i] < loc2[j])
+                i++;
+            else j++;
         }
-        return true;
+        return min_dst;
     }
 };

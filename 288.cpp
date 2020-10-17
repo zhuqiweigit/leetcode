@@ -9,26 +9,30 @@
 #include <set>
 using namespace std;
 
-class Solution {
+class ValidWordAbbr {
 public:
-    bool isStrobogrammatic(string num) {
-        int i = 0, j = num.size() - 1;
-        if(num.size() == 0)
-            return true;
-        while(i <= j){
-            if(num[i] != '0' && num[i] != '1' && num[i] != '6'
-            && num[i] != '8' && num[i] != '9')
-                return false;
-            if(num[j] != '0' && num[j] != '1' && num[j] != '6'
-               && num[j] != '8' && num[j] != '9')
-                return false;
-            if(num[i] == '6' && num[j] == '9' || num[i] == '9' && num[j] == '6'
-            || num[i] != '6' && num[i] != '9' && num[i] == num[j]){
-                i++; j--;
-                continue;
+    map<string, set<string>> mp;
+    ValidWordAbbr(vector<string>& dictionary) {
+        for(int i = 0; i < dictionary.size(); i++){
+            if(dictionary[i].size() == 2){
+                mp[dictionary[i]].insert(dictionary[i]);
+            }else{
+                string temp;
+                temp = temp + dictionary[i][0] + to_string(dictionary[i].size()  -2) + dictionary[i][dictionary[i].size() - 1];
+                mp[temp].insert(dictionary[i]);
             }
-            return false;
         }
-        return true;
+    }
+
+    bool isUnique(string word) {
+        string temp = word;
+        if(word.length() > 2){
+            word = word[0] + to_string(word.length() - 2) + word[word.size() - 1];
+        }
+        if(mp.find(word) == mp.end() || mp[word].find(temp) != mp[word].end() && mp[word].size() == 1){
+            return true;
+        }
+        return false;
+
     }
 };
