@@ -1,21 +1,31 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <sstream>
+#include <map>
 using namespace std;
 class Solution {
 public:
-    int maxSubArray(vector<int>& nums) {
-        int n = nums.size();
-        if(n == 0)
+    int trap(vector<int>& height) {
+        if(height.size() <= 2)
             return 0;
-        vector<int> dp(n, 0);
-        dp[0] = nums[0];
-        int max_ans = dp[0];
-        for(int i = 1; i < n; i++){
-            dp[i] = max(dp[i - 1] + nums[i], nums[i]);
-            if(max_ans < dp[i])
-                max_ans = dp[i];
+        vector<int> l_max(height.size(), 0), r_max(height.size(), 0);
+        int ans = 0;
+        l_max[0] = height[0];
+        r_max.back() = height.back();
+        for(int i = 1; i < height.size(); i++){
+            l_max[i] = max(height[i], l_max[i - 1]);
         }
-        return max_ans;
+        for(int j = height.size() - 2; j >= 0; j--){
+            r_max[j] = max(height[j], r_max[j + 1]);
+        }
+        for(int i = 0; i < height.size(); i++){
+            ans += min(l_max[i], r_max[i]) - height[i];
+        }
+        return ans;
+
     }
 };
