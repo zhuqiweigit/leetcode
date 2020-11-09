@@ -11,49 +11,31 @@ using namespace std;
 
 class Solution {
 public:
-    int offset[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    void solve(vector<vector<char>>& board) {
-        if(board.empty())
-            return;
-        int m = board.size(), n = board[0].size();
-        for(int i = 0; i < m; i++){
-            if(board[i][0] == 'O')
-                bfs(make_pair(i, 0), board);
-            if(board[i][n - 1] == 'O')
-                bfs(make_pair(i, n - 1), board);
-        }
-        for(int j = 0; j < n; j++){
-            if(board[0][j] == 'O')
-                bfs(make_pair(0, j), board);
-            if(board[m - 1][j] == 'O')
-                bfs(make_pair(m - 1, j), board);
-        }
-        for(int i = 0; i < m; i++){
-            for(int j = 0; j < n; j++){
-                if(board[i][j] == 'A'){
-                    board[i][j] = 'O';
-                }else if(board[i][j] == 'O'){
-                    board[i][j] = 'X';
+    int minCut(string s) {
+        if(s.empty() || s.size() == 1)
+            return 0;
+        int m = s.size();
+        vector<int> dp(m, 0);
+        for(int i = 1; i < m; i++){
+            if(check(0, i))
+                dp[i] = 0;
+            else{
+                int min_cut = INT_MAX;
+                for(int j = 1; j < i; j++){
+                    if(check(j, i) && dp[j - 1] + 1 < min_cut)
+                        min_cut = dp[j - 1] + 1;
                 }
+                dp[i] = min_cut;
             }
         }
+        return dp.back();
     }
 
-    void bfs(pair<int, int> begin, vector<vector<char>> &board){
-        queue<pair<int, int>> qu;
-        qu.push(begin);
-        board[begin.first][begin.second] = 'A';
-        while(!qu.empty()){
-            pair<int, int> now = qu.front(); qu.pop();
-            int x = now.first, y = now.second;
-            for(int i = 0; i < 4; i++){
-                int xx = x + offset[i][0], yy = y + offset[i][1];
-                if(xx >= 0 && xx < board.size() && yy >= 0 && yy < board[0].size()
-                   && board[xx][yy] == 'O'){
-                    qu.emplace(xx, yy);
-                    board[xx][yy] = 'A';
-                }
-            }
+    bool  check(string& s, int i, int j){
+        while(i <= j){
+            if(s[i] != s[j])
+                return false;
         }
+        return true;
     }
 };

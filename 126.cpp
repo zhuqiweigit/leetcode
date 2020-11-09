@@ -12,22 +12,29 @@ class Solution {
 public:
     vector<vector<string>> ans;
     unordered_map<string, int> string2int;
-    unordered_map<int, string> int2string;
+    vector<string> int2string;
     int idx = 0;
     vector<vector<int>> graph;
     vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        for(int i = 0; i < wordList.size(); i++){
+            add_word(wordList[i]);
+        }
+        if(string2int.find(beginWord) == string2int.end()){
+            add_word(beginWord);
+            wordList.push_back(beginWord);
+        }
         for(int i = 0; i < wordList.size(); i++){
             for(int j = i + 1; j < wordList.size(); j++){
                 add_edge(wordList[i], wordList[j]);
             }
         }
-        if(string2int.find(beginWord) == string2int.end()){
+       /* if(string2int.find(beginWord) == string2int.end()){
             for(int i = 0; i < wordList.size(); i++){
                 add_edge(wordList[i], beginWord);
             }
-        }
+        }*/
         if(string2int.find(endWord) == string2int.end())
-            return ans;
+            return {};
         vector<int> cost(idx, INT_MAX);
         int beginId = string2int[beginWord], endId = string2int[endWord];
         cost[beginId] = 0;
@@ -60,14 +67,13 @@ public:
         if(string2int.find(word) == string2int.end()){
             graph.emplace_back();
             string2int[word] = idx;
+            int2string.emplace_back();
             int2string[idx] = word;
             idx++;
         }
     }
 
     void add_edge(string &worda, string &wordb){
-        add_word(worda);
-        add_word(wordb);
         int id1 = string2int[worda], id2 = string2int[wordb];
         if(check(worda, wordb)){
             graph[id1].push_back(id2);
@@ -79,7 +85,7 @@ public:
         if(a.size() != b.size())
             return false;
         int cnt = 0;
-        for(int i = 0; i < a.size(); i++){
+        for(int i = 0; i < a.size() && cnt < 2; i++){
             if(a[i] != b[i])
                 cnt++;
         }

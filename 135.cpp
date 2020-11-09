@@ -11,16 +11,21 @@ using namespace std;
 
 class Solution {
 public:
-    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-        int sum_gas = 0, cur_gas = 0, start = 0;
-        for(int i = 0; i < gas.size(); i++){
-            sum_gas += (gas[i] - cost[i]);
-            cur_gas += (gas[i] - cost[i]);
-            if(cur_gas < 0){
-                start = i + 1;
-                cur_gas = 0;
-            }
+    int candy(vector<int>& ratings) {
+        if(ratings.empty())
+            return 0;
+        int sum = 0;
+        vector<int> ans(ratings.size(), 1);
+        for(int i = 1; i < ratings.size(); i++){
+            if(ratings[i] > ratings[i - 1])
+                ans[i] = ans[i - 1] + 1;
         }
-        return sum_gas < 0 ? -1 : start;
+        for(int i = ratings.size() - 2; i >= 0; i--){
+            if(ratings[i] > ratings[i + 1])
+                ans[i] = max(ans[i], ans[i + 1] + 1);
+            sum += ans[i];
+        }
+        sum += ans.back();
+        return sum;
     }
 };

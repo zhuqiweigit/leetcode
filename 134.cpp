@@ -11,31 +11,16 @@ using namespace std;
 
 class Solution {
 public:
-    int minCut(string s) {
-        if(s.empty() || s.size() == 1)
-            return 0;
-        int m = s.size();
-        vector<int> dp(m, 0);
-        for(int i = 1; i < m; i++){
-            if(check(0, i))
-                dp[i] = 0;
-            else{
-                int min_cut = INT_MAX;
-                for(int j = 1; j < i; j++){
-                    if(check(j, i) && dp[j - 1] + 1 < min_cut)
-                        min_cut = dp[j - 1] + 1;
-                }
-                dp[i] = min_cut;
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int sum_gas = 0, cur_gas = 0, start = 0;
+        for(int i = 0; i < gas.size(); i++){
+            sum_gas += (gas[i] - cost[i]);
+            cur_gas += (gas[i] - cost[i]);
+            if(cur_gas < 0){
+                start = i + 1;
+                cur_gas = 0;
             }
         }
-        return dp.back();
-    }
-
-    bool  check(string& s, int i, int j){
-        while(i <= j){
-            if(s[i] != s[j])
-                return false;
-        }
-        return true;
+        return sum_gas < 0 ? -1 : start;
     }
 };
