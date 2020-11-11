@@ -5,33 +5,34 @@
 #include <list>
 #include <unordered_map>
 using namespace std;
-struct TreeNode {
-  int val;
-  TreeNode *left;
-  TreeNode *right;
-  TreeNode() : val(0), left(nullptr), right(nullptr) {}
-  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
 class Solution {
 public:
-    TreeNode* upsideDownBinaryTree(TreeNode* root) {
-        return helper(root);
-    }
-
-    TreeNode* helper(TreeNode* root){
-        if(root == nullptr || root->left == nullptr)
-            return root;
-        TreeNode* ll = helper(root->left);
-        TreeNode* new_root = ll;
-        TreeNode* new_root_right = new_root;
-        while(new_root_right->right){
-            new_root_right = new_root_right->right;
+    int mybuf_size = 0, mybuf_ptr = 0;
+    char mybuf[4];
+    bool init = true;
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    int read(char *buf, int n) {
+        if(init){
+            mybuf_ptr = read4(mybuf);
+            init = false;
         }
-        new_root_right->left = root->right;
-        new_root_right->right = root;
-        root->left = nullptr;
-        root->right = nullptr;
-        return new_root;
+        int idx = 0;
+        while(idx < n){
+            while(idx < n && mybuf_ptr < mybuf_size){
+                buf[idx++] = mybuf[mybuf_ptr++];
+            }
+            if(mybuf_ptr == mybuf_size){
+                mybuf_size = read4(mybuf);
+                mybuf_ptr = 0;
+                if(mybuf_size == 0){
+                    return idx;
+                }
+            }
+        }
+        return n;
     }
 };

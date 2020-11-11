@@ -4,35 +4,36 @@
 #include <algorithm>
 #include <list>
 #include <unordered_map>
+#include <set>
 using namespace std;
 class Solution {
+    struct bucket{
+        int max_val = INT_MIN;
+        int min_val = INT_MAX;
+        bool used = false;
+    };
 public:
-    int mybuf_size = 0, mybuf_ptr = 0;
-    char mybuf[4];
-    bool init = true;
-    /**
-     * @param buf Destination buffer
-     * @param n   Number of characters to read
-     * @return    The number of actual characters read
-     */
-    int read(char *buf, int n) {
-        if(init){
-            mybuf_ptr = read4(mybuf);
-            init = false;
+    int maximumGap(vector<int>& nums) {
+        if(nums.size() <= 1)
+            return 0;
+        int max_num = *max_element(nums.begin(), nums.end());
+        int min_num = *min_element(nums.begin(), nums.end());
+        int bucket_num = nums.size();
+        int bucket_size = (max_num - min_num) / bucket_num;
+        vector<bucket> buckets(bucket_num);
+        for(const auto &item: nums){
+            int id = (item - min_num) / bucket_size;
+            buckets[id].min_val = min(buckets[id].min_val, item);
+            buckets[id].max_val = max(buckets[id].max_val, item);
+            buckets[id].used = true;
         }
-        int idx = 0;
-        while(idx < n){
-            while(idx < n && mybuf_ptr < mybuf_size){
-                buf[idx++] = mybuf[mybuf_ptr++];
-            }
-            if(mybuf_ptr == mybuf_size){
-                mybuf_size = read4(mybuf);
-                mybuf_ptr = 0;
-                if(mybuf_size == 0){
-                    return idx;
-                }
-            }
+        int ans = -1, pre_bucket_max = min_num;
+        for(const auto &bk : buckets){
+            if(bk.used == false)
+                continue;
+            ans = max(bk.min_val - pre_bucket_max, ans);
+            pre_bucket_max = bk.max_val;
         }
-        return n;
+        return ans;
     }
 };
